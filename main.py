@@ -77,8 +77,8 @@ Welcome to Help menu of [Group Help Bot](http://t.me/HRZGroupHelpBot)..!**""",
             ]]
             )
         )
-@HRZ.on_message(filters.command(["help"]) & filters.private)
-async def help(client, message):
+@HRZ.on_message(filters.command(["about"]) & filters.private)
+async def about(client, message):
     await message.reply_photo(
         photo=random.choice(PICS),
         caption=f"""**Hey {message.from_user.mention} 👋
@@ -99,25 +99,6 @@ Welcome to About menu of [Group Help Bot](http://t.me/HRZGroupHelpBot)..!
             ]]
             )
         )
-             
-@HRZ.on_message(filters.command(["ban"]) & filters.group)
-async def ban(self, message):
-        if not message.reply_to_message:
-            return message.send_response('Use this command responding to a message written by the user to ban.')
-        group_id = message.chat.id
-        moderator = message.from_user
-        banned = message.reply_to_message.from_user
-        try:
-            self.bot.kick_chat_member(message.chat.id, message.reply_to_message.from_user.id)
-        except ApiException as e:
-            return send_error(message, e)
-        msg = message.response('<code>{b} ({bi})</code> banned by <code>{m} ({mi})</code>'.format(
-            **escape_items(b=get_name(banned), bi=banned.id, m=get_name(moderator), mi=moderator.id)),
-            parse_mode='html')
-        inline = msg.inline_keyboard()
-        inline.add_button('Unban', callback=self.unban_button, callback_kwargs={'u': banned.id})
-        msg.send()
-        self.ban_db(group_id, moderator, banned)
 
             
 print("Bot Started..!") 
