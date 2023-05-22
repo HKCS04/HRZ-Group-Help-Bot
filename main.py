@@ -97,7 +97,7 @@ Welcome to About menu of [Group Help Bot](http://t.me/HRZGroupHelpBot)..!
             )
         )
              
-@HRZ.on_message(filters.command(["ban']) & filters.group)
+@HRZ.on_message(filters.command(["ban"]) & filters.group)
 async def ban(self, message):
         if not message.reply_to_message:
             return message.send_response('Use this command responding to a message written by the user to ban.')
