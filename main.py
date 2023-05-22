@@ -5,9 +5,9 @@ from pyrogram.errors import UserNotParticipant
 
 HRZ = Client(
    "GroupHelpBot",
-   api_id=API_ID,
-   api_hash=API_HASH,
-   bot_token=BOT_TOKEN
+   api_id=int(os.environ.get("API_ID", "")),
+   api_hash=os.environ.get("API_HASH", ""),
+   bot_token=os.environ.get("BOT_TOKEN", "")
 )
 
 API_ID = int(os.environ.get("API_ID", ""))
