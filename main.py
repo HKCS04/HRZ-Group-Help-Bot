@@ -53,7 +53,7 @@ Just hit /help to see my commands and how they work... 😁**""",
             InlineKeyboardButton("📢 Channel", url="t.me/TheHRZTG"),
             InlineKeyboardButton("👥 Support Group", url="t.me/HRZSupport"),
             ],[
-            InlineKeyboardButton("🛠 Help", callback_data="help")
+            InlineKeyboardButton("🛠 Help", callback_data="help"),
             InlineKeyboardButton("🤠 About", callback_data="about")
             ]]
             )
@@ -65,7 +65,7 @@ async def help(client, message):
         photo=random.choice(PICS),
         caption=f"""**Hey {message.from_user.mention} 👋
 
-Welcome to Help menu of [Group Help Bot](http://t.me/HRZGroupHelpBot)..!**"""
+Welcome to Help menu of [Group Help Bot](http://t.me/HRZGroupHelpBot)..!**""",
         reply_markup=InlineKeyboardMarkup( [[
             InlineKeyboardButton("💁🏼‍♂️ Basic Commands", callback_data="commands"),
             ],[
@@ -89,7 +89,7 @@ Welcome to About menu of [Group Help Bot](http://t.me/HRZGroupHelpBot)..!
 亗 Channel   : [HRZ TG](t.me/TheHRZTG)
 亗 Support   : [HRZ Support](t.me/HRZSupport)
 亗 Server    : [Somewhere](t.me/HRZRobot)
-亗 Source    : [Click Here](t.me/HRZRobot)**"""
+亗 Source    : [Click Here](t.me/HRZRobot)**""",
         reply_markup=InlineKeyboardMarkup( [[
             InlineKeyboardButton("🏡 Home", callback_data="start"),
             InlineKeyboardButton("🔙 Back", callback_data="help")
