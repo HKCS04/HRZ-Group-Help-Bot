@@ -46,7 +46,7 @@ I can manage your group or supergroup with Powerful Features... 🔥
 
 Add me to a group and make me Admin to show my powers... 😍
 
-Just hit /help to see my commands and how they work... 😁**"""
+Just hit /help to see my commands and how they work... 😁**""",
         reply_markup=InlineKeyboardMarkup( [[
             InlineKeyboardButton("➕ Add me to your Group ➕", url="http://t.me/HRZGroupHelpBot?startgroup=start"),
             ],[
