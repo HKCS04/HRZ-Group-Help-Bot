@@ -17,7 +17,9 @@ API_HASH = os.environ.get("API_HASH", "")
              
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
              
-PICS = os.environ.get("PICS", "")
+PICS = [
+ "https://telegra.ph/file/736d8009b207d02a937bf.jpg"
+]
              
 force_channel = os.environ.get("FORCE_CHANNEL", "")
              
