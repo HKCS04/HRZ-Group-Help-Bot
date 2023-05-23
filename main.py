@@ -195,15 +195,7 @@ async def ban(_, message):
     else:
         if str(user_id).lower().startswith("@"):
             await message.reply_text(f"""**Someone is breaked the limit..!
-{user.mention} is Banned ⚠"""
-            )
-        else:
-            await message.reply_text(
-                "Someone is also breaked the limit..! "
-                f"<a href='tg://user?id={user_id}'>"
-                f"{user_first_name}"
-                "</a>"
-                "Banned ⚠"
+{user_first_name} is Banned ⚠"""
             )
 
 @HRZ.on_message(filters.command(["unban"]) & filters.group)
@@ -216,17 +208,8 @@ async def unban(_, message):
         await message.reply_text(str(error))
     else:
         if str(user_id).lower().startswith("@"):
-            await message.reply_text(
-                "Ok, You are Unbanned Now ✔ "
-                f"{user_first_name}"
-                "You can Join the group..!"
-            )
-        else:
-            await message.reply_text(
-                "Ok, You are Unbanned Now ✔ "
-                f"<a href='tg://user?id={user_id}'>"
-                f"{user_first_name}"
-                "You can Join the group..!"
+            await message.reply_text(f"""Ok, You are Unbanned Now ✔ 
+{user_first_name} can Join the group..!
             )
 
             
