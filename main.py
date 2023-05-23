@@ -164,6 +164,25 @@ def extract_time(time_val):
         return bantime
     else:
         return None
+   
+# _enufm
+
+def _eufm(message: Message) -> Tuple[int, str, Union[Chat, User]]:
+    user_id = None
+    user_first_name = None
+    ithuenthoothengaa = None
+
+    if message.from_user:
+        ithuenthoothengaa = message.from_user
+        user_id = ithuenthoothengaa.id
+        user_first_name = ithuenthoothengaa.first_name
+
+    elif message.sender_chat:
+        ithuenthoothengaa = message.sender_chat
+        user_id = ithuenthoothengaa.id
+        user_first_name = ithuenthoothengaa.title
+
+    return (user_id, user_first_name, ithuenthoothengaa)
 
 @HRZ.on_message(filters.command(["ban"]) & filters.group)
 async def ban(_, message):
