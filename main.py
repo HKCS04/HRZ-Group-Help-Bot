@@ -5,7 +5,6 @@ import random
 from pyrogram.errors import UserNotParticipant
 from bot.extract_user import extract_user
 from bot.extract_time import extract_time
-from Midukki.functions.handlers import Ban
 
 HRZ = Client(
    "GroupHelpBot",
@@ -103,7 +102,7 @@ Welcome to About menu of [Group Help Bot](http://t.me/HRZGroupHelpBot)..!
             )
         )
 
-@HRZ.on_message(filters.command(["Ban"]) & filters.group)
+@HRZ.on_message(filters.command(["ban"]) & filters.group)
 async def ban(_, message):
     user_id, user_first_name, _ = extract_user(message)
 
@@ -113,22 +112,20 @@ async def ban(_, message):
         await message.reply_text(str(error))
     else:
         if str(user_id).lower().startswith("@"):
-            await message.reply_text(
-                "വേറെ ഒരാളും പൊടി പാറിപ്പിക്കുന്നു..! "
-                f"{user_first_name}"
-                " നെ വിലക്കിയിരിക്കുന്നു."
+            await message.reply_text(f"""**Someone is breaked the limit..!
+{message.from_user.mention} is Banned ⚠"""
             )
         else:
             await message.reply_text(
-                "വേറെ ഒരാളും പൊടി പാറിപ്പിക്കുന്നു..! "
+                "Someone is also breaked the limit..! "
                 f"<a href='tg://user?id={user_id}'>"
                 f"{user_first_name}"
                 "</a>"
-                " നെ വിലക്കിയിരിക്കുന്നു."
+                "Banned ⚠"
             )
 
-@Midukki_RoboT.on_message(Ban.b)
-async def un_ban_user(_, message):
+@HRZ.on_message(filters.command(["unban"]) & filters.group)
+async def unban(_, message):
     user_id, user_first_name, _ = extract_user(message)
 
     try:
@@ -138,17 +135,16 @@ async def un_ban_user(_, message):
     else:
         if str(user_id).lower().startswith("@"):
             await message.reply_text(
-                "ശരി, മാറ്റിയിട്ടുണ്ട്... ഇനി "
-                f"{user_first_name} ക്ക് "
-                " ഗ്രൂപ്പിൽ ചേരാൻ കഴിയും!"
+                "Ok, You are Unbanned Now ✔ "
+                f"{user_first_name}"
+                "You can Join the group..!"
             )
         else:
             await message.reply_text(
-                "ശരി, മാറ്റിയിട്ടുണ്ട്... ഇനി "
+                "Ok, You are Unbanned Now ✔ "
                 f"<a href='tg://user?id={user_id}'>"
                 f"{user_first_name}"
-                "</a> ക്ക് "
-                " ഗ്രൂപ്പിൽ ചേരാൻ കഴിയും!"
+                "You can Join the group..!"
             )
 
             
