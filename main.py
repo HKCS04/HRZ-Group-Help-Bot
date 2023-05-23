@@ -3,6 +3,10 @@ from pyrogram import filters, Client
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 import random
 from pyrogram.errors import UserNotParticipant
+from Midukki.midukki import Midukki_RoboT 
+from Midukki.functions.extract_user import extract_user
+from Midukki.functions.extract_time import extract_time
+from Midukki.functions.handlers import Ban
 
 HRZ = Client(
    "GroupHelpBot",
@@ -99,6 +103,54 @@ Welcome to About menu of [Group Help Bot](http://t.me/HRZGroupHelpBot)..!
             ]]
             )
         )
+
+@HRZ.on_message(filters.command(["Ban"]) & filters.group)
+async def ban(_, message):
+    user_id, user_first_name, _ = extract_user(message)
+
+    try:
+        await message.chat.ban_member(user_id=user_id)
+    except Exception as error:
+        await message.reply_text(str(error))
+    else:
+        if str(user_id).lower().startswith("@"):
+            await message.reply_text(
+                "വേറെ ഒരാളും പൊടി പാറിപ്പിക്കുന്നു..! "
+                f"{user_first_name}"
+                " നെ വിലക്കിയിരിക്കുന്നു."
+            )
+        else:
+            await message.reply_text(
+                "വേറെ ഒരാളും പൊടി പാറിപ്പിക്കുന്നു..! "
+                f"<a href='tg://user?id={user_id}'>"
+                f"{user_first_name}"
+                "</a>"
+                " നെ വിലക്കിയിരിക്കുന്നു."
+            )
+
+@Midukki_RoboT.on_message(Ban.b)
+async def un_ban_user(_, message):
+    user_id, user_first_name, _ = extract_user(message)
+
+    try:
+        await message.chat.unban_member(user_id=user_id)
+    except Exception as error:
+        await message.reply_text(str(error))
+    else:
+        if str(user_id).lower().startswith("@"):
+            await message.reply_text(
+                "ശരി, മാറ്റിയിട്ടുണ്ട്... ഇനി "
+                f"{user_first_name} ക്ക് "
+                " ഗ്രൂപ്പിൽ ചേരാൻ കഴിയും!"
+            )
+        else:
+            await message.reply_text(
+                "ശരി, മാറ്റിയിട്ടുണ്ട്... ഇനി "
+                f"<a href='tg://user?id={user_id}'>"
+                f"{user_first_name}"
+                "</a> ക്ക് "
+                " ഗ്രൂപ്പിൽ ചേരാൻ കഴിയും!"
+            )
 
             
 print("Bot Started..!") 
