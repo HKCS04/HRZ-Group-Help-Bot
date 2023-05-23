@@ -265,124 +265,52 @@ def markup():
 def button():
     return InlineKeyboardButton
 
-            
-# ShowId Command Available in PM and Groups
-            
-@HRZ.on_message("showid")
-async def showid(client, message):
-    chat_type = message.chat.type
-    if chat_type == enums.ChatType.PRIVATE:
-        user_id = message.chat.id
-        first = message.from_user.first_name
-        last = message.from_user.last_name or ""
-        username = message.from_user.username
-        dc_id = message.from_user.dc_id or ""
-        await message.reply_text(
-            f"<b>亗 First Name:</b> {first}\n<b>亗 Last Name:</b> {last}\n<b>亗 Username:</b> {username}\n<b>亗 Telegram ID:</b> <code>{user_id}</code>\n<b>亗 Data Centre:</b> <code>{dc_id}</code>",
-            quote=True
-        )
+@HRZ.on_message(mute)
+async def mute(_, message):
+    user_id, user_first_name, _ = extract_user(message)
 
-    elif chat_type in [enums.ChatType.GROUP, enums.ChatType.SUPERGROUP]:
-        _id = ""
-        _id += (
-            "<b>亗 Chat ID</b>: "
-            f"<code>{message.chat.id}</code>\n"
-        )
-        if message.reply_to_message:
-            _id += (
-                "<b>亗 User ID</b>: "
-                f"<code>{message.from_user.id if message.from_user else 'Anonymous'}</code>\n"
-                "<b>亗 Replied User ID</b>: "
-                f"<code>{message.reply_to_message.from_user.id if message.reply_to_message.from_user else 'Anonymous'}</code>\n"
-            )
-            file_info = get_file_id(message.reply_to_message)
-        else:
-            _id += (
-                "<b>亗 User ID</b>: "
-                f"<code>{message.from_user.id if message.from_user else 'Anonymous'}</code>\n"
-            )
-            file_info = get_file_id(message)
-        if file_info:
-            _id += (
-                f"<b>{file_info.message_type}</b>: "
-                f"<code>{file_info.file_id}</code>\n"
-            )
-        await message.reply_text(
-            _id,
-            quote=True
-        )
-
-@HRZ.on_message("who_is")
-async def who_is(client, message):
-    status_message = await message.reply_text(
-        "`Fetching user info...`"
-    )
-    await status_message.edit(
-        "`Processing user info...`"
-    )
-    from_user = None
-    from_user_id, _ = extract_user(message)
     try:
-        from_user = await client.get_users(from_user_id)
+        await message.chat.restrict_member(
+            user_id=user_id, permissions=ChatPermissions()
+        )
     except Exception as error:
-        await status_message.edit(str(error))
-        return
-    if from_user is None:
-        return await status_message.edit("no valid user_id / message specified")
-    message_out_str = ""
-    message_out_str += f"<b>亗 First Name:</b> {from_user.first_name}\n"
-    last_name = from_user.last_name or "<b>None</b>"
-    message_out_str += f"<b>亗 Last Name:</b> {last_name}\n"
-    message_out_str += f"<b>亗 Telegram ID:</b> <code>{from_user.id}</code>\n"
-    username = from_user.username or "<b>None</b>"
-    dc_id = from_user.dc_id or "[User Doesn't Have A Valid DP]"
-    message_out_str += f"<b>亗 Data Centre:</b> <code>{dc_id}</code>\n"
-    message_out_str += f"<b>亗 User Name:</b> @{username}\n"
-    message_out_str += f"<b>亗 User 𝖫𝗂𝗇𝗄:</b> <a href='tg://user?id={from_user.id}'><b>Click Here</b></a>\n"
-    if message.chat.type in ((enums.ChatType.SUPERGROUP, enums.ChatType.CHANNEL)):
-        try:
-            chat_member_p = await message.chat.get_member(from_user.id)
-            joined_date = (
-                chat_member_p.joined_date or datetime.now()
-            ).strftime("%Y.%m.%d %H:%M:%S")
-            message_out_str += (
-                "<b>亗 Joined this Chat on:</b> <code>"
-                f"{joined_date}"
-                "</code>\n"
-            )
-        except UserNotParticipant:
-            pass
-    chat_photo = from_user.photo
-    if chat_photo:
-        local_user_photo = await client.download_media(
-            message=chat_photo.big_file_id
-        )
-        buttons = [[
-            button()('🔐 Close', callback_data='close_data')
-        ]]
-        reply_markup = markup()(buttons)
-        await message.reply_photo(
-            photo=local_user_photo,
-            quote=True,
-            reply_markup=reply_markup,
-            caption=message_out_str,
-            parse_mode=enums.ParseMode.HTML,
-            disable_notification=True
-        )
-        os.remove(local_user_photo)
+        await message.reply_text(str(error))
     else:
-        buttons = [[
-            button()('🔐 Close', callback_data='close_data')
-        ]]
-        reply_markup = markup()(buttons)
+        if str(user_id).lower().startswith("@"):
+            await message.reply_text(
+                "👍🏻 " f"{user_first_name}" " I Muted him! 🤐"
+            )
+            
+@HRZ.on_message(tempmute)
+async def tempmute(_, message):
+    if not len(message.command) > 1:
+        return
+
+    user_id, user_first_name, _ = extract_user(message)
+
+    until_date_val = extract_time(message.command[1])
+    if until_date_val is None:
         await message.reply_text(
-            text=message_out_str,
-            reply_markup=reply_markup,
-            quote=True,
-            parse_mode=enums.ParseMode.HTML,
-            disable_notification=True
+            (
+                "Invalid time type specified. "
+                "Expected m, h, or d, Got it: {}"
+            ).format(message.command[1][-1])
         )
-    await status_message.delete()
+        return
+
+    try:
+        await message.chat.restrict_member(
+            user_id=user_id, permissions=ChatPermissions(), until_date=until_date_val
+        )
+    except Exception as error:
+        await message.reply_text(str(error))
+    else:
+        if str(user_id).lower().startswith("@"):
+            await message.reply_text(
+                "Be quiet for a while! 😠"
+                f"{user_first_name}"
+                f" muted for {message.command[1]}!"
+            )
    
 
 
