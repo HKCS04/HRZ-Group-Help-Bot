@@ -265,52 +265,31 @@ def markup():
 def button():
     return InlineKeyboardButton
 
-@HRZ.on_message("mute")
-async def mute(_, message):
-    user_id, user_first_name, _ = extract_user(message)
-
-    try:
-        await message.chat.restrict_member(
-            user_id=user_id, permissions=ChatPermissions()
-        )
-    except Exception as error:
-        await message.reply_text(str(error))
-    else:
-        if str(user_id).lower().startswith("@"):
-            await message.reply_text(
-                "👍🏻 " f"{user_first_name}" " I Muted him! 🤐"
-            )
-            
-@HRZ.on_message("tempmute")
-async def tempmute(_, message):
-    if not len(message.command) > 1:
+@HRZ.on_message(filters.command(["report"]) | filters.regex("@admin"))
+async def report(bot, message):
+    chat_id = message.chat.id
+    user_id = message.from_user.id
+    administrators = []
+    chat_member = await bot.get_chat_member(chat_id=chat_id, user_id=user_id)
+    if (
+            chat_member.status == enums.ChatMemberStatus.ADMINISTRATOR
+            or chat_member.status == enums.ChatMemberStatus.OWNER
+    ):
         return
-
-    user_id, user_first_name, _ = extract_user(message)
-
-    until_date_val = extract_time(message.command[1])
-    if until_date_val is None:
-        await message.reply_text(
-            (
-                "Invalid time type specified. "
-                "Expected m, h, or d, Got it: {}"
-            ).format(message.command[1][-1])
-        )
-        return
-
-    try:
-        await message.chat.restrict_member(
-            user_id=user_id, permissions=ChatPermissions(), until_date=until_date_val
-        )
-    except Exception as error:
-        await message.reply_text(str(error))
-    else:
-        if str(user_id).lower().startswith("@"):
-            await message.reply_text(
-                "Be quiet for a while! 😠"
-                f"{user_first_name}"
-                f" muted for {message.command[1]}!"
-            )
+    async for m in bot.get_chat_members(chat_id, filter=enums.ChatMembersFilter.ADMINISTRATORS):
+        administrators.append(m)
+    full_name = message.from_user.first_name + " " + message.from_user.last_name if message.from_user.last_name else message.from_user.first_name
+    await message.reply_text("`Report sent !")
+    for admin in administrators:
+        try:
+            if admin.user.id != message.from_user.id:
+                await bot.send_message(
+                    chat_id=admin.user.id, 
+                    text=f"**⚠️ ATTENTION!**\n{full_name} [{user_id}] has required an admin action in the group: **{message.chat.title}**\n\n[👉🏻 Go to message]({message.link})",
+                    disable_web_page_preview=True
+                )
+        except:
+            pass
    
 
 
