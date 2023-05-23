@@ -265,7 +265,7 @@ def markup():
 def button():
     return InlineKeyboardButton
 
-@HRZ.on_message(mute)
+@HRZ.on_message("mute")
 async def mute(_, message):
     user_id, user_first_name, _ = extract_user(message)
 
@@ -281,7 +281,7 @@ async def mute(_, message):
                 "👍🏻 " f"{user_first_name}" " I Muted him! 🤐"
             )
             
-@HRZ.on_message(tempmute)
+@HRZ.on_message("tempmute")
 async def tempmute(_, message):
     if not len(message.command) > 1:
         return
