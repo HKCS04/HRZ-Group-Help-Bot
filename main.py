@@ -3,9 +3,8 @@ from pyrogram import filters, Client
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 import random
 from pyrogram.errors import UserNotParticipant
-from Midukki.midukki import Midukki_RoboT 
-from Midukki.functions.extract_user import extract_user
-from Midukki.functions.extract_time import extract_time
+from bot.extract_user import extract_user
+from bot.extract_time import extract_time
 from Midukki.functions.handlers import Ban
 
 HRZ = Client(
