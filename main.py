@@ -268,7 +268,7 @@ def button():
             
 # ShowId Command Available in PM and Groups
             
-@Midukki_RoboT.on_message("showid")
+@HRZ.on_message("showid")
 async def showid(client, message):
     chat_type = message.chat.type
     if chat_type == enums.ChatType.PRIVATE:
@@ -312,7 +312,7 @@ async def showid(client, message):
             quote=True
         )
 
-@Midukki_RoboT.on_message("who_is")
+@HRZ.on_message("who_is")
 async def who_is(client, message):
     status_message = await message.reply_text(
         "`Fetching user info...`"
