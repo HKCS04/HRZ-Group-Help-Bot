@@ -1,10 +1,11 @@
 import os
+from typing import Tuple, Union
 from pyrogram import filters, Client
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, Message, User, Chat
 import random
+from datetime import datetime, timedelta
 from pyrogram.errors import UserNotParticipant
-from extract_user import extract_user
-from extract_time import extract_time
+pyrogram.enums import MessageEntityTypeimport extract_time
 
 HRZ = Client(
    "GroupHelpBot",
@@ -101,6 +102,68 @@ Welcome to About menu of [Group Help Bot](http://t.me/HRZGroupHelpBot)..!
             ]]
             )
         )
+      
+# extract_user
+
+def extract_user(message: Message) -> Tuple[int, str, Union[Chat, User]]:
+    """extracts the user from a message"""
+    user_id = None
+    user_first_name = None
+    aviyal = None
+
+    if len(message.command) > 1:
+        if (
+            len(message.entities) > 1 and
+            message.entities[1].type == MessageEntityType.TEXT_MENTION
+        ):
+            # 0: is the command used
+            # 1: should be the user specified
+            required_entity = message.entities[1]
+            user_id = required_entity.user.id
+            user_first_name = required_entity.user.first_name
+            aviyal = required_entity.user
+        else:
+            user_id = message.command[1]
+            # don't want to make a request -_-
+            user_first_name = user_id
+            aviyal = True
+
+        try:
+            user_id = int(user_id)
+        except ValueError:
+            pass
+
+    elif message.reply_to_message:
+        user_id, user_first_name, aviyal = _eufm(message.reply_to_message)
+
+    elif message:
+        user_id, user_first_name, aviyal = _eufm(message)
+
+    return (user_id, user_first_name, aviyal)
+
+# extract_time
+
+def extract_time(time_val):
+    if any(time_val.endswith(unit) for unit in ("s", "m", "h", "d")):
+        unit = time_val[-1]
+        time_num = time_val[:-1]  # type: str
+        if not time_num.isdigit():
+            return None
+
+        if unit == "s":
+            bantime = datetime.now() + timedelta(seconds=int(time_num))
+        elif unit == "m":
+            bantime = datetime.now() + timedelta(minutes=int(time_num))
+        elif unit == "h":
+            bantime = datetime.now() + timedelta(hours=int(time_num))
+        elif unit == "d":
+            bantime = datetime.now() + timedelta(days=int(time_num))
+        else:
+            # how even...?
+            return None
+        return bantime
+    else:
+        return None
 
 @HRZ.on_message(filters.command(["ban"]) & filters.group)
 async def ban(_, message):
