@@ -3,8 +3,8 @@ from pyrogram import filters, Client
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 import random
 from pyrogram.errors import UserNotParticipant
-from bot.extract_user import extract_user
-from bot.extract_time import extract_time
+from extract_user import extract_user
+from extract_time import extract_time
 
 HRZ = Client(
    "GroupHelpBot",
