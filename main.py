@@ -5,7 +5,7 @@ from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQ
 import random
 from datetime import datetime, timedelta
 from pyrogram.errors import UserNotParticipant
-pyrogram.enums import MessageEntityTypeimport extract_time
+from pyrogram.enums import MessageEntityType
 
 HRZ = Client(
    "GroupHelpBot",
