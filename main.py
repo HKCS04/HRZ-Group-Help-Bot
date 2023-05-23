@@ -176,7 +176,7 @@ async def ban(_, message):
     else:
         if str(user_id).lower().startswith("@"):
             await message.reply_text(f"""**Someone is breaked the limit..!
-{message.from_user.mention} is Banned ⚠"""
+{user.mention} is Banned ⚠"""
             )
         else:
             await message.reply_text(
